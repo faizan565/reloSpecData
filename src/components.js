@@ -16,6 +16,7 @@ export const ButtonContainer = styled.div`
   margin: 8px auto 20px auto;
   position: relative;
   width: fit-content;
+  left: ${props => props.update && '7%'};
 `;
 
 export const Btn = styled.button`
