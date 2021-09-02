@@ -66,7 +66,17 @@ function UpdateUser() {
                 'Access-Control-Allow-Origin': '*',
                 "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
             },
-            body: JSON.stringify({ UserAutonumber: autoNumber, UserName: userName })         //---------------add other values to be updated.
+            body: JSON.stringify({
+                UserAutonumber: autoNumber,
+                UserName: userName,
+                Password: password,
+                License: license,
+                Firm: firm,
+                Network: network,
+                BranchName: branchName,
+                Status: status,
+                BillingMonth: billingMonth
+            })         //---------------add other values to be updated.
         };
         fetch('http://localhost:8015/updateCustomer.php',requestOptions)
             .then(function (response) {
@@ -90,7 +100,7 @@ function UpdateUser() {
             network: <input value={network} onChange={(e)=> setNetwork(e.target.value)}/> <br/>
             branchName: <input value={branchName} onChange={(e)=> setBranchName(e.target.value)}/> <br/>
             status: <input value={status} onChange={(e)=> setStatus(e.target.value)}/> <br/>
-            billingMonth: <input value={billingMonth} onChange={(e)=> setBillingMonth(e.target.value)}/> <br/>
+            billingMonth: <input  type="month" value={billingMonth} onChange={(e)=> setBillingMonth(e.target.value)}/> <br/>
             <button onClick={callUpdate} disabled={isDisabled}>Submit</button>
             <button onClick={goToUsers} >Go Back</button>
         </div>
