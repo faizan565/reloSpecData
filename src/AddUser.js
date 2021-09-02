@@ -30,46 +30,12 @@ function AddUser() {
     const [companyDb, setCompanyDb] = useState('');
     const [email, setEmail] = useState('');
     const [billingMonth, setBillingMonth] = useState('');
-    const [requiredUser, setRequiredUser] = useState();
     const [isDisabled, setDisabled] = useState(false);
-
-    // const findAndSet = (response) =>{
-    //     if(response.user !== []) {
-    //         setRequiredUser(JSON.parse(response.user));
-    //     }
-    // };
 
     const goToUsers = () =>{
         let path = `/`;
         history.push(path);
     }
-
-    // useEffect(()=>{
-    //     const encodedValue = encodeURIComponent(autoNumber);
-    //     fetch(`http://localhost:8015/getSingle.php?id=${encodedValue}`)
-    //         .then(res => res.json())
-    //         .then(result => {
-    //             findAndSet(
-    //                 {user: result}
-    //             );
-    //         });
-    // },[autoNumber])
-    // useEffect(()=>{
-    //     // setAutoNumber(params.id);
-    //     console.log(requiredUser);
-    //     if(requiredUser){
-    //         setUserName(requiredUser.UserName);
-    //         setPassword(requiredUser.Password);
-    //         setLicense(requiredUser.LicenseLevel);
-    //         setFirm(requiredUser.Firm);
-    //         setNetwork(requiredUser.Network);
-    //         setBranchName(requiredUser.BranchName);
-    //         setCompanyDb(requiredUser.CompanyDB);
-    //         setEmail(requiredUser.EmailAddress);
-    //         setStatus(requiredUser.Status);
-    //         setBillingMonth(requiredUser.BillingMonth);
-    //     }
-    // },[requiredUser])
 
     const callUpdate =()=>{
         const requestOptions = {

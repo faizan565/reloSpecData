@@ -2,14 +2,16 @@ import './App.css';
 import styled from 'styled-components'
 import {useEffect, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt, faTrash } from '@fortawesome/fontawesome-free-solid'
+import { faPencilAlt, faTrash, faTimes } from '@fortawesome/fontawesome-free-solid'
 import { useHistory } from "react-router-dom";
-import {Btn, ButtonContainer, LinkOption, MainDiv, TableBody} from "./components";
+import {Btn, ButtonContainer, ConfirmModal, LinkOption, MainDiv, TableBody, Wrapper,} from "./components";
 
 function AllUsers() {
     const [items, setItems ] = useState([]);
     const [limit, setLimit ] = useState(10);
     const [hideLinks, setHideLinks ] = useState('1');
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [userId, setUserId] = useState(false);
     let count = 1;
     let history = useHistory();
 
@@ -36,8 +38,36 @@ function AllUsers() {
         let path = `/add-user`;
         history.push(path);
     }
-    const deleteUser = (id) =>{
 
+    const setModal = (id) =>{
+        setUserId(id);
+        setConfirmDelete(!confirmDelete);
+    }
+    const deleteUser = () =>{
+        setConfirmDelete(false);
+        const requestOptions = {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+            },
+            body: JSON.stringify({
+                UserAutonumber: userId,
+            })
+        };
+        fetch('http://localhost:8015/deleteCustomer.php',requestOptions)
+            .then(function (response) {
+                console.log(response);
+                return response;
+
+            }).catch(function (err) {
+            console.log(err)
+        });
+
+        setTimeout(document.location.reload(),2500)
     }
 
     useEffect(()=>{
@@ -71,7 +101,7 @@ function AllUsers() {
                     <th>LoginTime</th>
                     <th>Status</th>
                     <th>BillingMonth</th>
-                    {hideLinks !== '2' && <th>Edit</th>}
+                    {hideLinks !== '2' && <th>Edit / Delete</th>}
                 </tr>
                 {items !== [] ? items.slice(0, limit).map(item => (
                         <tr >
@@ -93,7 +123,7 @@ function AllUsers() {
                             </a>
                                 <br/>
                                 <a style={{cursor: "pointer" }}
-                                   onClick={() => deleteUser(JSON.parse(item).UserAutonumber)}>
+                                   onClick={() => setModal(JSON.parse(item).UserAutonumber)}>
                                     <FontAwesomeIcon style={{marginTop: '10px'}} icon={faTrash}/>
                                 </a>
                             </td>
@@ -109,6 +139,16 @@ function AllUsers() {
                 <Btn margin onClick={showLess}>Less rows</Btn>
                 {hideLinks !== '2' && <Btn onClick={addUser}>Add Record</Btn>}
             </ButtonContainer>
+            {confirmDelete &&
+            <>
+                <Wrapper>
+                </Wrapper>
+                <ConfirmModal>
+                    <FontAwesomeIcon onClick={setModal} style={{float: 'right', cursor: 'pointer'}} icon={faTimes}/>
+                    <p>Are you sure, you want to delete this Record.</p>
+                    <Btn modal onClick={() => deleteUser()}>Confirm</Btn>
+                </ConfirmModal>
+            </>}
         </MainDiv>
     );
 }

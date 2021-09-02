@@ -16,10 +16,12 @@ export const ButtonContainer = styled.div`
   margin: 8px auto 20px auto;
   position: relative;
   width: fit-content;
-  left: ${props => props.update && '7%'};
+  //left: ${props => props.update && '7%'};
 `;
 
 export const Btn = styled.button`
+  display: ${props => props.modal && 'block'};
+  margin: ${props => props.modal && '0 auto'};;
   padding: 6px;
   background-color: white;
   color: #666;
@@ -42,7 +44,7 @@ export const TableBody = styled.table`
   border-radius: 5px;
   padding: 5px;
   max-width: 90%;
-  margin-left:${props => props.update ? '17%' : '5%'} ;
+  margin-left:${props => props.update ? '11%' : '5%'} ;
   tr{
     &:hover{
       background-color: #d9d9fa;
@@ -96,4 +98,34 @@ export const LinkOption = styled.div`
     cursor: pointer;
     margin-right: 33%;
   }
+`;
+
+export const ConfirmModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 135px;
+  padding: 10px;
+  border: 3px solid #6c7ae0;
+  background: whitesmoke;
+  border-radius: 15px;
+  p {
+    text-align: center;
+    margin-top: 10%;
+    color: #666;
+    font-size: large;
+  }
+`;
+
+export const Wrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.5);
+  width: 100%;
+  height: 100%;
+  opacity: .6;
 `;

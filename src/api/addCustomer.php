@@ -1,22 +1,41 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+
+$data = json_decode(file_get_contents('php://input'));
+ 
 require_once "./config.php";
 
-if(isset($_POST['name'])){
-			$name = $_POST['name'];
-				$model = '';
-				$color = '';
-			if(isset($_POST['model'])){
-				$model = $_POST['model'];
-			}
-			if(isset($_POST['color'])){
-				$color = $_POST['color'];
-			}	
-			$query = "insert into tbl_mobile (name,model,color) values ('" . $name ."','". $model ."','" . $color ."')";
-			$dbcontroller = new DBController();
-			$result = $dbcontroller->executeQuery($query);
-			if($result != 0){
-				$result = array('success'=>1);
-				return $result;
-			}
-		}
+// var_dump($data);
+// var_dump($conn);
+if(!empty($data->UserName) && !empty($data->Password)){
+	$UserName = $data->UserName;
+    $Password = $data->Password;
+    $License = $data->License;
+    $Firm = $data->Firm;
+    $Network = $data->Network;
+    $BranchName = $data->BranchName;
+    $Status = $data->Status;
+    $EmailAddress = $data->EmailAddress;
+    $CompanyDB = $data->CompanyDB;
+    $BillingMonth = $data->BillingMonth;
+
+    // echo  gettype($UserAutonumber) . $UserName . $Password . $License . $Firm . $Network . gettype($BillingMonth). $BranchName .$BillingMonth;
+	$query = "INSERT INTO Users (UserName, Password, LicenseLevel, Firm, Network, BranchName, Status, EmailAddress, CompanyDB, BillingMonth) 
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" ;
+     
+    $params = array($UserName, $Password, $License, $Firm, $Network, $BranchName, $Status, $EmailAddress, $CompanyDB, $BillingMonth);
+    $result = sqlsrv_query($conn, $query, $params);
+    // $rows_affected = sqlsrv_rows_affected( $result);
+
+    if ($result) {  
+        echo "Record Updated Succesfully.\n" ;
+        // . $rows_affected;  
+    } else {  
+        echo "Record Updation failed.\n";  
+        die(print_r(sqlsrv_errors(), true));  
+    }  
+}
+sqlsrv_close($conn);  
+?>
