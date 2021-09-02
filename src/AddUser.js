@@ -2,8 +2,6 @@ import './App.css';
 import styled from 'styled-components'
 import {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
-import {Btn, ButtonContainer, LinkOption, MainDiv, TableBody} from "./components";
-
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faPencilAlt } from '@fortawesome/fontawesome-free-solid'
 
@@ -99,59 +97,23 @@ function UpdateUser() {
         goToUsers();
     }
     return(
-        <MainDiv>
-            <center>
-                <h3>ReloSpec IDs and Passwords (NAMES database)</h3><br/>
-            </center>
-            <TableBody update>
-                <fieldset>
-                <legend> Update User Record</legend>
-                <tr>
-                    <td>Name:</td>
-                    <td><input value={userName} onChange={(e)=> setUserName(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>Password:</td>
-                    <td><input value={password} onChange={(e)=> setPassword(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>CompanyDb:</td>
-                    <td><input value={companyDb} onChange={(e)=> setCompanyDb(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>EmailAddress:</td>
-                    <td><input value={email} onChange={(e)=> setEmail(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td> LicenseLevel:</td>
-                    <td><input value={license} onChange={(e)=> setLicense(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>Firm:</td>
-                    <td><input value={firm} onChange={(e)=> setFirm(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>Network:</td>
-                    <td><input value={network} onChange={(e)=> setNetwork(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>BranchName:</td>
-                    <td><input value={branchName} onChange={(e)=> setBranchName(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>Status:</td>
-                    <td><input value={status} onChange={(e)=> setStatus(e.target.value)}/></td>
-                </tr>
-                <tr>
-                    <td>BillingMonth:</td>
-                    <td><input value={billingMonth} onChange={(e)=> setBillingMonth(e.target.value)}/></td>
-                </tr>
-                    </fieldset>
-            </TableBody>
-            <ButtonContainer><Btn margin onClick={callUpdate} disabled={isDisabled}>Submit</Btn>
-                <Btn onClick={goToUsers} >Go Back</Btn>
-            </ButtonContainer>
-        </MainDiv>
+        <div>
+            Bettinaw
+            <br/>
+            this is update page<br/>
+            name: <input value={userName} onChange={(e)=> setUserName(e.target.value)}/> <br/>
+            password: <input value={password} onChange={(e)=> setPassword(e.target.value)}/> <br/>
+            CompanyDb: <input value={companyDb} onChange={(e)=> setCompanyDb(e.target.value)}/> <br/>
+            EmailAddress: <input value={email} onChange={(e)=> setEmail(e.target.value)}/> <br/>
+            license: <input value={license} onChange={(e)=> setLicense(e.target.value)}/> <br/>
+            firm: <input value={firm} onChange={(e)=> setFirm(e.target.value)}/> <br/>
+            network: <input value={network} onChange={(e)=> setNetwork(e.target.value)}/> <br/>
+            branchName: <input value={branchName} onChange={(e)=> setBranchName(e.target.value)}/> <br/>
+            status: <input value={status} onChange={(e)=> setStatus(e.target.value)}/> <br/>
+            billingMonth: <input value={billingMonth} onChange={(e)=> setBillingMonth(e.target.value)}/> <br/>
+            <button onClick={callUpdate} disabled={isDisabled}>Submit</button>
+            <button onClick={goToUsers} >Go Back</button>
+        </div>
     );
 }
 

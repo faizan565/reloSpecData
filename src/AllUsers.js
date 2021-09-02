@@ -32,6 +32,10 @@ function AllUsers() {
         history.push(path);
     }
 
+    const addUser = () =>{
+        let path = `/add-user`;
+        history.push(path);
+    }
     const deleteUser = (id) =>{
 
     }
@@ -70,40 +74,40 @@ function AllUsers() {
                     {hideLinks !== '2' && <th>Edit</th>}
                 </tr>
                 {items !== [] ? items.slice(0, limit).map(item => (
-                    <tr >
-                        <td>{count++}</td>
-                        <td>{JSON.parse(item).UserName}</td>
-                        <td>{JSON.parse(item).Password}</td>
-                        <td>{JSON.parse(item).CompanyDB}</td>
-                        <td>{JSON.parse(item).LicenseLevel}</td>
-                        <td>{JSON.parse(item).Firm}</td>
-                        <td>{JSON.parse(item).Network}</td>
-                        <td>{JSON.parse(item).BranchName}</td>
-                        <td>{JSON.parse(item).LoginTime && JSON.parse(item).LoginTime.date.split('.')[0]}</td>
-                        <td>{JSON.parse(item).Status}</td>
-                        <td>{JSON.parse(item).BillingMonth}</td>
-                        {hideLinks !== '2' &&
+                        <tr >
+                            <td>{count++}</td>
+                            <td>{JSON.parse(item).UserName}</td>
+                            <td>{JSON.parse(item).Password}</td>
+                            <td>{JSON.parse(item).CompanyDB}</td>
+                            <td>{JSON.parse(item).LicenseLevel}</td>
+                            <td>{JSON.parse(item).Firm}</td>
+                            <td>{JSON.parse(item).Network}</td>
+                            <td>{JSON.parse(item).BranchName}</td>
+                            <td>{JSON.parse(item).LoginTime && JSON.parse(item).LoginTime.date.split('.')[0]}</td>
+                            <td>{JSON.parse(item).Status}</td>
+                            <td>{JSON.parse(item).BillingMonth}</td>
+                            {hideLinks !== '2' &&
                             <td><a style={{cursor: "pointer"}}
-                                onClick={() => goToUpdate(JSON.parse(item).UserAutonumber)}>
-                            <FontAwesomeIcon icon={faPencilAlt}/>
-                                </a>
+                                   onClick={() => goToUpdate(JSON.parse(item).UserAutonumber)}>
+                                <FontAwesomeIcon icon={faPencilAlt}/>
+                            </a>
                                 <br/>
                                 <a style={{cursor: "pointer" }}
                                    onClick={() => deleteUser(JSON.parse(item).UserAutonumber)}>
                                     <FontAwesomeIcon style={{marginTop: '10px'}} icon={faTrash}/>
                                 </a>
                             </td>
-                        }
-                    </tr>
-                ))
-                :
+                            }
+                        </tr>
+                    ))
+                    :
                     <div>Loading</div>
                 }
             </TableBody>
             <ButtonContainer>
                 <Btn margin onClick={showMore}>More rows</Btn>
                 <Btn margin onClick={showLess}>Less rows</Btn>
-                {hideLinks !== '2' && <Btn>Add Record</Btn>}
+                {hideLinks !== '2' && <Btn onClick={addUser}>Add Record</Btn>}
             </ButtonContainer>
         </MainDiv>
     );

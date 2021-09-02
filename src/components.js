@@ -7,9 +7,13 @@ export const MainDiv = styled.div`
     color: #666;
     font-size: 15px;
   }
+  h3 {
+    color: #666;
+    font-size: 20px;
+  }
 `;
 export const ButtonContainer = styled.div`
-  margin: 20px auto 20px auto;
+  margin: 8px auto 20px auto;
   position: relative;
   width: fit-content;
 `;
@@ -31,13 +35,13 @@ export const Btn = styled.button`
 `;
 
 export const TableBody = styled.table`
-  
+
   font-size: small;
-  border: 3px solid #d9d9fa;
+  border:${props => props.update ? 'none' : '3px solid #d9d9fa'} ;
   border-radius: 5px;
   padding: 5px;
   max-width: 90%;
-  margin-left: 5%;
+  margin-left:${props => props.update ? '17%' : '5%'} ;
   tr{
     &:hover{
       background-color: #d9d9fa;
@@ -56,10 +60,27 @@ export const TableBody = styled.table`
     color: #666;
     padding: 5px;
     font-family: Arial, Helvetica, sans-serif;
-    
+
   }
-  
-  
+  input {
+    border: 0;
+    border-bottom: 2px solid #d9d9fa;
+    color: #666;
+  }
+  fieldset {
+    border: 3px solid #d9d9fa ;
+    padding: 15px;
+  }
+  legend {
+    background: #d9d9fa;
+    border-radius: 10px;
+    font-size: 15px;
+    padding: 7px;
+    font-weight: 600;
+    color: #666;
+  }
+
+
 `;
 
 export const LinkOption = styled.div`
