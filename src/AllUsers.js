@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faTrash, faTimes } from '@fortawesome/fontawesome-free-solid'
 import { useHistory } from "react-router-dom";
-import {Btn, ButtonContainer, ConfirmModal, LinkOption, MainDiv, TableBody, Wrapper,} from "./components";
+import {Btn, ButtonContainer, ConfirmModal, LinkOption, Loading, MainDiv, TableBody, Wrapper,} from "./components";
 
 function AllUsers() {
     const [items, setItems ] = useState([]);
@@ -36,6 +36,11 @@ function AllUsers() {
 
     const addUser = () =>{
         let path = `/add-user`;
+        history.push(path);
+    }
+
+    const filterUsers = () =>{
+        let path = `/filter-users`;
         history.push(path);
     }
 
@@ -103,7 +108,7 @@ function AllUsers() {
                     <th>BillingMonth</th>
                     {hideLinks !== '2' && <th>Edit / Delete</th>}
                 </tr>
-                {items !== [] ? items.slice(0, limit).map(item => (
+                {items.length !== 0 ? items.slice(0, limit).map(item => (
                         <tr >
                             <td>{count++}</td>
                             <td>{JSON.parse(item).UserName}</td>
@@ -131,20 +136,24 @@ function AllUsers() {
                         </tr>
                     ))
                     :
-                    <div>Loading</div>
+                    <tr><td colSpan="12"><Loading>Loading Data</Loading></td></tr>
                 }
             </TableBody>
             <ButtonContainer>
                 <Btn margin onClick={showMore}>More rows</Btn>
                 <Btn margin onClick={showLess}>Less rows</Btn>
-                {hideLinks !== '2' && <Btn onClick={addUser}>Add Record</Btn>}
+                {hideLinks !== '2' &&
+                <>
+                    <Btn margin onClick={addUser}>Add Record</Btn>
+                    <Btn onClick={filterUsers}>Filter Record</Btn>
+                </>}
             </ButtonContainer>
             {confirmDelete &&
             <>
                 <Wrapper>
                 </Wrapper>
                 <ConfirmModal>
-                    <FontAwesomeIcon onClick={setModal} style={{float: 'right', cursor: 'pointer'}} icon={faTimes}/>
+                    <FontAwesomeIcon onClick={setModal} style={{float: 'right', cursor: 'pointer', color: '#666'}} icon={faTimes}/>
                     <p>Are you sure, you want to delete this Record.</p>
                     <Btn modal onClick={() => deleteUser()}>Confirm</Btn>
                 </ConfirmModal>

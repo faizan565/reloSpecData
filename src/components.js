@@ -125,7 +125,12 @@ export const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0,0,0,0.5);
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vw;
   opacity: .6;
+`;
+
+export const Loading = styled.div`
+  padding: 10px;
+  font-size: large;
 `;

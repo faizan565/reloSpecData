@@ -76,6 +76,7 @@ function AddUser() {
             <center>
                 <h3>ReloSpec IDs and Passwords (NAMES database)</h3><br/>
             </center>
+            <form>
             <TableBody update>
                 <fieldset>
                     <legend> Add User Record</legend>
@@ -131,6 +132,7 @@ function AddUser() {
                     </tr>
                 </fieldset>
             </TableBody>
+            </form>
             <ButtonContainer update><Btn margin onClick={callUpdate} disabled={isDisabled}>Submit</Btn>
                 <Btn onClick={goToUsers} >Go Back</Btn>
             </ButtonContainer>
