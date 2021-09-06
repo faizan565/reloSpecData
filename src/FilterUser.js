@@ -47,11 +47,16 @@ function FilterUsers() {
             }
             setFilteredUser(response.user);
         }
+        setShowResults(!showResults);
     };
 
     const goToUsers = () =>{
         let path = `/`;
         history.push(path);
+    }
+
+    const goToFilter = () =>{
+        window.location.reload();
     }
 
     const goToUpdate = (id) =>{
@@ -91,7 +96,6 @@ function FilterUsers() {
     }
 
     const applyFilter = () =>{
-        setShowResults(!showResults);
         const encodedName = encodeURIComponent(userName);
         const encodedCompanyDb = encodeURIComponent(companyDb);
         const encodedLicense = encodeURIComponent(license);
@@ -101,13 +105,14 @@ function FilterUsers() {
         const encodedFirm = encodeURIComponent(firm);
         const encodedBillingMonth = encodeURIComponent(billingMonth);
         const encodedBranch = encodeURIComponent(branchName);
-        fetch(`http://localhost:8015/filterCustomer.php?name=${encodedName}&&firm=${encodedFirm}&&license=${encodedLicense}&&network=${encodedNetwork}&&email=${encodedEmail}&&status=${encodedStatus}&&month=${encodedBillingMonth}&&db=${encodedCompanyDb}&&branch=${encodedBranch}`)
+        fetch(`http://localhost:8015/filterCustomer.php?name=${encodedName || '***xz'}&&firm=${encodedFirm || '***xz'}&&license=${encodedLicense || '***xz'}&&network=${encodedNetwork || '***xz'}&&email=${encodedEmail || '***xz'}&&status=${encodedStatus || '***xz'}&&month=${encodedBillingMonth || '***xz'}&&db=${encodedCompanyDb || '***xz'}&&branch=${encodedBranch || '***xz'}`)
             .then(res => res.json())
             .then(result => {
                 findAndSet(
                     {user: result}
                 );
             });
+        setLimit(10);
     }
 
     useEffect(() => {
@@ -235,7 +240,7 @@ function FilterUsers() {
                             <Btn margin onClick={showLess}>Less rows</Btn>
                         </>
                         }
-                        <Btn onClick={goToUsers}>Reset Filter</Btn>
+                        <Btn onClick={goToFilter}>Reset Filter</Btn>
 
                     </ButtonContainer>
                     {confirmDelete &&

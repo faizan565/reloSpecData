@@ -1,7 +1,7 @@
 import './App.css';
 import {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
-import {Btn, ButtonContainer, LinkOption, MainDiv, TableBody} from "./components";
+import {Btn, ButtonContainer, LinkOption, MainDiv, TableBody, WarningText} from "./components";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faBuilding, faCalendar,
@@ -71,12 +71,15 @@ function AddUser() {
 
         goToUsers();
     }
+
+    useEffect(()=>{
+        setDisabled(userName === '' || password === '');
+    },[userName,password]);
     return(
         <MainDiv>
             <center>
                 <h3>ReloSpec IDs and Passwords (NAMES database)</h3><br/>
             </center>
-            <form>
             <TableBody update>
                 <fieldset>
                     <legend> Add User Record</legend>
@@ -132,8 +135,11 @@ function AddUser() {
                     </tr>
                 </fieldset>
             </TableBody>
-            </form>
-            <ButtonContainer update><Btn margin onClick={callUpdate} disabled={isDisabled}>Submit</Btn>
+            {isDisabled &&
+            <WarningText>Please Enter Name And Password</WarningText>
+            }
+            <ButtonContainer update>
+                <Btn margin onClick={callUpdate} disabled={isDisabled}>Submit</Btn>
                 <Btn onClick={goToUsers} >Go Back</Btn>
             </ButtonContainer>
         </MainDiv>

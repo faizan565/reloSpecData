@@ -16,7 +16,7 @@ export const ButtonContainer = styled.div`
   margin: 8px auto 20px auto;
   position: relative;
   width: fit-content;
-  //left: ${props => props.update && '7%'};
+  // left: ${props => props.update && '7%'};
 `;
 
 export const Btn = styled.button`
@@ -133,4 +133,10 @@ export const Wrapper = styled.div`
 export const Loading = styled.div`
   padding: 10px;
   font-size: large;
+`;
+export const WarningText = styled.p`
+  padding: 2px;
+  font-size: small;
+  color: red;
+  text-align: center;
 `;

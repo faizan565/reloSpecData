@@ -1,7 +1,7 @@
 import './App.css';
 import {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
-import {Btn, ButtonContainer, LinkOption, MainDiv, TableBody} from "./components";
+import {Btn, ButtonContainer, LinkOption, MainDiv, TableBody, WarningText} from "./components";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser,faKey, faEnvelope, faStar, faCodeBranch,
@@ -12,7 +12,7 @@ function UpdateUser() {
     let history = useHistory();
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
-    const [userName, setUserName] = useState('testName');
+    const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [license, setLicense] = useState('');
     const [firm, setFirm] = useState('');
@@ -63,6 +63,10 @@ function UpdateUser() {
             setBillingMonth(requiredUser.BillingMonth);
         }
     },[requiredUser])
+
+    useEffect(()=>{
+        setDisabled(userName === '' || password === '');
+    },[userName,password]);
 
     const callUpdate =()=>{
         const requestOptions = {
@@ -159,7 +163,11 @@ function UpdateUser() {
                 </tr>
                     </fieldset>
             </TableBody>
-            <ButtonContainer update><Btn margin onClick={callUpdate} disabled={isDisabled}>Submit</Btn>
+            {isDisabled &&
+            <WarningText>Please Enter Name And Password</WarningText>
+            }
+            <ButtonContainer update>
+                <Btn margin onClick={callUpdate} disabled={isDisabled}>Submit</Btn>
                 <Btn onClick={goToUsers} >Go Back</Btn>
             </ButtonContainer>
         </MainDiv>
