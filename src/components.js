@@ -138,9 +138,28 @@ export const Loading = styled.div`
   padding: 10px;
   font-size: large;
 `;
+
 export const WarningText = styled.p`
   padding: 2px;
   font-size: small;
   color: red;
   text-align: center;
+`;
+
+export const SubHeader = styled.div`
+  width: 33%;
+  float: right;
+  display: flex;
+  margin-left: auto;
+
+`;
+
+export const SearchDiv = styled.div`
+  float: right;
+  position: relative;
+  width: fit-content;
+  margin-right: 3%;
+  input {
+    margin: 5px;
+  }
 `;

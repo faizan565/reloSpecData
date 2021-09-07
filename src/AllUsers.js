@@ -1,11 +1,21 @@
 // import './App.css';
 import "./style/styles.css";
 import styled from 'styled-components'
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faTrash, faTimes } from '@fortawesome/fontawesome-free-solid'
 import { useHistory } from "react-router-dom";
-import {Btn, ButtonContainer, ConfirmModal, LinkOption, Loading, MainDiv, TableBody, Wrapper,} from "./components";
+import {
+    Btn,
+    ButtonContainer,
+    ConfirmModal,
+    LinkOption,
+    Loading,
+    MainDiv, SearchDiv,
+    SearchInput, SubHeader,
+    TableBody,
+    Wrapper,
+} from "./components";
 import DataTable from "react-data-table-component";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,6 +27,8 @@ function AllUsers() {
     const [items, setItems ] = useState([]);
     const [hideLinks, setHideLinks ] = useState('1');
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const [filterText, setFilterText] = useState('');
+    const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
     const [userId, setUserId] = useState(0);
     let history = useHistory();
     const columns = [
@@ -127,6 +139,7 @@ function AllUsers() {
         }
     ];
     const [userData, setUserData ] = useState([]);
+    const [filteredItems, setFilteredItems ] = useState([]);
 
     const setData = ((response) =>{
         setItems(response.items);
@@ -178,21 +191,50 @@ function AllUsers() {
         setTimeout(document.location.reload(),2500)
     }
 
-    const subHeaderComponent = <><LinkOption>
-        <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
-        <br/>
-        <label><input type="radio" name="link" value="2" onClick={()=> setHideLinks('2')} /> Hide Links</label>
-    </LinkOption>
-        {hideLinks !== '2' &&
-        <ButtonContainer allUser>
-            <Btn margin onClick={addUser}>Add Record</Btn>
-            <Btn onClick={filterUsers}>Filter Record</Btn>
-        </ButtonContainer>}
-    </>;
+    useEffect(()=>{
+        setFilteredItems(userData.filter(
+                item => item.UserName && item.UserName.toLowerCase().includes(filterText.toLowerCase()),
+            )
+        )},[filterText])
+
+    const subHeaderComponentMemo = useMemo(() => {
+        const handleClear = () => {
+            if (filterText) {
+                setResetPaginationToggle(!resetPaginationToggle);
+                setFilterText('');
+            }
+        };
+
+        return (
+            <>
+                <LinkOption>
+                    <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
+                    <br/>
+                    <label><input type="radio" name="link" value="2" onClick={()=> setHideLinks('2')} /> Hide Links</label>
+                </LinkOption>
+                <SubHeader>
+                    <SearchDiv>
+                    <input type="text"onInput={e => setFilterText(e.target.value)} value={filterText} />
+                    <FontAwesomeIcon onClick={handleClear} style={{cursor: 'pointer'}} icon={faTimes}/>
+                </SearchDiv>
+                    {hideLinks !== '2' &&
+                    <div style={{float:'right'}} >
+                        <Btn margin onClick={addUser}>Add Record</Btn>
+                        <Btn onClick={filterUsers}>Filter Record</Btn>
+                    </div>
+                    }
+                </SubHeader>
+
+            </>
+        );
+    }, [filterText, resetPaginationToggle]);
+
+
 
     useEffect(() =>{
         items !==[] && items.map(item =>{
-                setUserData(userData => [...userData,JSON.parse(item)])
+                setUserData(userData => [...userData,JSON.parse(item)]);
+                setFilteredItems(userData => [...userData,JSON.parse(item)])
             },
         )},[items]);
 
@@ -215,16 +257,18 @@ function AllUsers() {
                         dense
                         title=" ReloSpec User Data"
                         columns={columns}
-                        data={userData}
+                        data={filteredItems}
                         defaultSortFieldId={1}
                         sortIcon={<SortIcon/>}
                         pagination
                         subHeader={true}
-                        subHeaderComponent={subHeaderComponent}
+                        paginationResetDefaultPage={resetPaginationToggle}
+                        subHeaderComponent={subHeaderComponentMemo}
                         subHeaderAlign="left"
                         // theme="dark"
                         keyField="UserAutonumber"
                         striped
+                        persistTableHead
                     />
                 </Card>
             </div>
