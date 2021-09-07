@@ -5,9 +5,15 @@ import {Btn, ButtonContainer, ConfirmModal, LinkOption, Loading, MainDiv, TableB
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faUser, faKey, faEnvelope, faStar, faCodeBranch,
+    faUser, faEnvelope, faStar, faCodeBranch,
     faDatabase, faIdBadge, faBuilding, faCalendar, faLink, faPencilAlt, faTrash, faTimes
 } from '@fortawesome/fontawesome-free-solid'
+import Card from "@material-ui/core/Card";
+import DataTable from "react-data-table-component";
+import SortIcon from "@material-ui/icons/ArrowDownward";
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 function FilterUsers() {
     let history = useHistory();
@@ -23,28 +29,14 @@ function FilterUsers() {
     const [filteredUser, setFilteredUser] = useState([]);
     const [isDisabled, setDisabled] = useState(false);
     const [showResults, setShowResults] = useState(true);
-    const [limit, setLimit ] = useState(10);
     const [hideLinks, setHideLinks ] = useState('1');
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [userId, setUserId] = useState(false);
+    const [userData, setUserData ] = useState([]);
 
-    let count = 1
-    const showMore = () =>{
-        setLimit(limit + 10);
-    }
-
-    const showLess = () =>{
-        if(limit > 10){
-            setLimit(limit - 10);
-        }
-    }
 
     const findAndSet = (response) =>{
         if( response.user && response.user !== []) {
-            if(response.user.length < 10)
-            {
-                setLimit(response.user.length);
-            }
             setFilteredUser(response.user);
         }
         setShowResults(!showResults);
@@ -112,8 +104,133 @@ function FilterUsers() {
                     {user: result}
                 );
             });
-        setLimit(10);
     }
+
+    const subHeaderComponent = <><LinkOption>
+        <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
+        <br/>
+        <label><input type="radio" name="link" value="2" onClick={()=> setHideLinks('2')} /> Hide Links</label>
+    </LinkOption>
+        {hideLinks !== '2' &&
+        <ButtonContainer allUser>
+            <Btn onClick={goToFilter}>Go To Filter</Btn>
+        </ButtonContainer>}
+    </>;
+
+    const columns = [
+        {
+            name: '#',
+            cell: (row, index) => index + 1
+        },
+        {
+            id: 1,
+            name: "User Name",
+            selector: (row) => row.UserName,
+            sortable: true,
+            reorder: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            center: true,
+        },
+        {
+            id: 2,
+            name: "User Id",
+            selector: (row) => row.UserAutonumber,
+            sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        {
+            id: 3,
+            name: "CompanyDB",
+            selector: (row) => row.CompanyDB,
+            // sortable: true,
+            right: true,
+            reorder: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            center: true,
+        },
+        {
+            id: 4,
+            name: "License",
+            selector: (row) => row.LicenseLevel,
+            // sortable: true,
+            reorder: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            center: true,
+        },
+        {
+            id: 5,
+            name: "Firm",
+            selector: (row) => row.Firm,
+            // sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        {
+            id: 6,
+            name: "Network",
+            selector: (row) => row.Network,
+            // sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        {
+            id: 7,
+            name: "Biiling Month",
+            selector: (row) => row.BillingMonth,
+            // sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        hideLinks === "1" && {
+            name: "Edit",
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            cell: (row) => (
+                <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={()=> goToUpdate(row.UserAutonumber)}
+                >
+                    <EditIcon />
+                </IconButton>
+            )
+        },
+        hideLinks === "1" && {
+            name: "Delete",
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            cell: (row) => (
+                <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={()=> setModal(row.UserAutonumber)}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            )
+        }
+    ];
+
+
+    useEffect(() =>{
+        filteredUser !==[] && filteredUser.map(item =>{
+                setUserData(userData => [...userData,JSON.parse(item)])
+            },
+        )},[filteredUser]);
 
     useEffect(() => {
         applyFilter();
@@ -121,11 +238,11 @@ function FilterUsers() {
 
     return(
         <MainDiv>
-            <center>
-                <h3>ReloSpec IDs and Passwords (NAMES database)</h3><br/>
-            </center>
             {!showResults ?
                 <>
+                    <center>
+                        <h3>ReloSpec IDs and Passwords (NAMES database)</h3><br/>
+                    </center>
                     <TableBody update>
                         <fieldset>
                             <legend> Filter User Record</legend>
@@ -182,67 +299,24 @@ function FilterUsers() {
                 </>
                 :
                 <>
-                    <LinkOption>
-                        <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
-                        <label><input type="radio" name="link" value="2" onClick={()=> setHideLinks('2')} /> Hide Links</label>
-                    </LinkOption>
-                    <TableBody>
-                        <tr>
-                            <th>#</th>
-                            <th>UserName<br/>(LoginName)</th>
-                            <th>Password</th>
-                            <th>CompanyDB</th>
-                            <th>LicenseLevel</th>
-                            <th>Firm</th>
-                            <th>Network</th>
-                            <th>BranchName</th>
-                            <th>LoginTime</th>
-                            <th>Status</th>
-                            <th>BillingMonth</th>
-                            {hideLinks !== '2' && <th>Edit / Delete</th>}
-                        </tr>
-                        {filteredUser.length !== 0 ? filteredUser.slice(0, limit).map(item => (
-                                <tr >
-                                    <td>{count++}</td>
-                                    <td>{JSON.parse(item).UserName}</td>
-                                    <td>{JSON.parse(item).Password}</td>
-                                    <td>{JSON.parse(item).CompanyDB}</td>
-                                    <td>{JSON.parse(item).LicenseLevel}</td>
-                                    <td>{JSON.parse(item).Firm}</td>
-                                    <td>{JSON.parse(item).Network}</td>
-                                    <td>{JSON.parse(item).BranchName}</td>
-                                    <td>{JSON.parse(item).LoginTime && JSON.parse(item).LoginTime.date.split('.')[0]}</td>
-                                    <td>{JSON.parse(item).Status}</td>
-                                    <td>{JSON.parse(item).BillingMonth}</td>
-                                    {hideLinks !== '2' &&
-                                    <td><a style={{cursor: "pointer"}}
-                                           onClick={() => goToUpdate(JSON.parse(item).UserAutonumber)}>
-                                        <FontAwesomeIcon icon={faPencilAlt}/>
-                                    </a>
-                                        <br/>
-                                        <a style={{cursor: "pointer" }}
-                                           onClick={() => setModal(JSON.parse(item).UserAutonumber)}>
-                                            <FontAwesomeIcon style={{marginTop: '10px'}} icon={faTrash}/>
-                                        </a>
-                                    </td>
-                                    }
-                                </tr>
-                            ))
-                            :
-                            <tr><td colSpan="12"><Loading>No Record Found</Loading></td></tr>
-                        }
-                    </TableBody>
-
-                    <ButtonContainer>
-                        {filteredUser.length > 10 &&
-                        <>
-                            <Btn margin onClick={showMore}>More rows</Btn>
-                            <Btn margin onClick={showLess}>Less rows</Btn>
-                        </>
-                        }
-                        <Btn onClick={goToFilter}>Reset Filter</Btn>
-
-                    </ButtonContainer>
+                    <div className="App">
+                        <Card>
+                            <DataTable
+                                dense
+                                title=" ReloSpec User Data"
+                                columns={columns}
+                                data={userData}
+                                defaultSortFieldId={1}
+                                sortIcon={<SortIcon/>}
+                                pagination
+                                subHeader={true}
+                                subHeaderComponent={subHeaderComponent}
+                                subHeaderAlign="left"
+                                keyField="UserAutonumber"
+                                striped
+                            />
+                        </Card>
+                    </div>
                     {confirmDelete &&
                     <>
                         <Wrapper>

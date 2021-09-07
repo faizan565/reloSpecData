@@ -1,33 +1,136 @@
-import './App.css';
+// import './App.css';
+import "./style/styles.css";
 import styled from 'styled-components'
 import {useEffect, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faTrash, faTimes } from '@fortawesome/fontawesome-free-solid'
 import { useHistory } from "react-router-dom";
 import {Btn, ButtonContainer, ConfirmModal, LinkOption, Loading, MainDiv, TableBody, Wrapper,} from "./components";
+import DataTable from "react-data-table-component";
+import Card from "@material-ui/core/Card";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import SortIcon from "@material-ui/icons/ArrowDownward";
 
 function AllUsers() {
     const [items, setItems ] = useState([]);
-    const [limit, setLimit ] = useState(10);
     const [hideLinks, setHideLinks ] = useState('1');
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const [userId, setUserId] = useState(false);
-    let count = 1;
+    const [userId, setUserId] = useState(0);
     let history = useHistory();
+    const columns = [
+        {
+            name: '#',
+            cell: (row, index) => index + 1
+        },
+        {
+            id: 1,
+            name: "User Name",
+            selector: (row) => row.UserName,
+            sortable: true,
+            reorder: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            center: true,
+        },
+        {
+            id: 2,
+            name: "User Id",
+            selector: (row) => row.UserAutonumber,
+            sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        {
+            id: 3,
+            name: "CompanyDB",
+            selector: (row) => row.CompanyDB,
+            // sortable: true,
+            right: true,
+            reorder: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            center: true,
+        },
+        {
+            id: 4,
+            name: "License",
+            selector: (row) => row.LicenseLevel,
+            // sortable: true,
+            reorder: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            center: true,
+        },
+        {
+            id: 5,
+            name: "Firm",
+            selector: (row) => row.Firm,
+            // sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        {
+            id: 6,
+            name: "Network",
+            selector: (row) => row.Network,
+            // sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        {
+            id: 7,
+            name: "Biiling Month",
+            selector: (row) => row.BillingMonth,
+            // sortable: true,
+            reorder: true,
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%'
+        },
+        hideLinks === "1" && {
+            name: "Edit",
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            cell: (row) => (
+                <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={()=> goToUpdate(row.UserAutonumber)}
+                >
+                    <EditIcon />
+                </IconButton>
+            )
+        },
+        hideLinks === "1" && {
+            name: "Delete",
+            center: true,
+            minWidth: '10%',
+            maxWidth: '20%',
+            cell: (row) => (
+                <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={()=> setModal(row.UserAutonumber)}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            )
+        }
+    ];
+    const [userData, setUserData ] = useState([]);
 
     const setData = ((response) =>{
         setItems(response.items);
     } );
-
-    const showMore = () =>{
-        setLimit(limit + 10);
-    }
-
-    const showLess = () =>{
-        if(limit > 10){
-            setLimit(limit - 10);
-        }
-    }
 
     const goToUpdate = (id) =>{
         let path = `update-user?id=${id}`;
@@ -75,6 +178,24 @@ function AllUsers() {
         setTimeout(document.location.reload(),2500)
     }
 
+    const subHeaderComponent = <><LinkOption>
+        <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
+        <br/>
+        <label><input type="radio" name="link" value="2" onClick={()=> setHideLinks('2')} /> Hide Links</label>
+    </LinkOption>
+        {hideLinks !== '2' &&
+        <ButtonContainer allUser>
+            <Btn margin onClick={addUser}>Add Record</Btn>
+            <Btn onClick={filterUsers}>Filter Record</Btn>
+        </ButtonContainer>}
+    </>;
+
+    useEffect(() =>{
+        items !==[] && items.map(item =>{
+                setUserData(userData => [...userData,JSON.parse(item)])
+            },
+        )},[items]);
+
     useEffect(()=>{
         fetch('http://localhost:8015/getCustomers.php')
             .then(res => res.json())
@@ -88,66 +209,25 @@ function AllUsers() {
     return (
 
         <MainDiv>
-            <center><h2>ReloSpec IDs and Passwords (NAMES database)</h2></center>
-            <LinkOption>
-                <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
-                <label><input type="radio" name="link" value="2" onClick={()=> setHideLinks('2')} /> Hide Links</label>
-            </LinkOption>
-            <TableBody>
-                <tr>
-                    <th>#</th>
-                    <th>UserName<br/>(LoginName)</th>
-                    <th>Password</th>
-                    <th>CompanyDB</th>
-                    <th>LicenseLevel</th>
-                    <th>Firm</th>
-                    <th>Network</th>
-                    <th>BranchName</th>
-                    <th>LoginTime</th>
-                    <th>Status</th>
-                    <th>BillingMonth</th>
-                    {hideLinks !== '2' && <th>Edit / Delete</th>}
-                </tr>
-                {items.length !== 0 ? items.slice(0, limit).map(item => (
-                        <tr >
-                            <td>{count++}</td>
-                            <td>{JSON.parse(item).UserName}</td>
-                            <td>{JSON.parse(item).Password}</td>
-                            <td>{JSON.parse(item).CompanyDB}</td>
-                            <td>{JSON.parse(item).LicenseLevel}</td>
-                            <td>{JSON.parse(item).Firm}</td>
-                            <td>{JSON.parse(item).Network}</td>
-                            <td>{JSON.parse(item).BranchName}</td>
-                            <td>{JSON.parse(item).LoginTime && JSON.parse(item).LoginTime.date.split('.')[0]}</td>
-                            <td>{JSON.parse(item).Status}</td>
-                            <td>{JSON.parse(item).BillingMonth}</td>
-                            {hideLinks !== '2' &&
-                            <td><a style={{cursor: "pointer"}}
-                                   onClick={() => goToUpdate(JSON.parse(item).UserAutonumber)}>
-                                <FontAwesomeIcon icon={faPencilAlt}/>
-                            </a>
-                                <br/>
-                                <a style={{cursor: "pointer" }}
-                                   onClick={() => setModal(JSON.parse(item).UserAutonumber)}>
-                                    <FontAwesomeIcon style={{marginTop: '10px'}} icon={faTrash}/>
-                                </a>
-                            </td>
-                            }
-                        </tr>
-                    ))
-                    :
-                    <tr><td colSpan="12"><Loading>Loading Data</Loading></td></tr>
-                }
-            </TableBody>
-            <ButtonContainer>
-                <Btn margin onClick={showMore}>More rows</Btn>
-                <Btn margin onClick={showLess}>Less rows</Btn>
-                {hideLinks !== '2' &&
-                <>
-                    <Btn margin onClick={addUser}>Add Record</Btn>
-                    <Btn onClick={filterUsers}>Filter Record</Btn>
-                </>}
-            </ButtonContainer>
+            <div className="App">
+                <Card>
+                    <DataTable
+                        dense
+                        title=" ReloSpec User Data"
+                        columns={columns}
+                        data={userData}
+                        defaultSortFieldId={1}
+                        sortIcon={<SortIcon/>}
+                        pagination
+                        subHeader={true}
+                        subHeaderComponent={subHeaderComponent}
+                        subHeaderAlign="left"
+                        // theme="dark"
+                        keyField="UserAutonumber"
+                        striped
+                    />
+                </Card>
+            </div>
             {confirmDelete &&
             <>
                 <Wrapper>

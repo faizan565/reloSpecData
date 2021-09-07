@@ -13,7 +13,7 @@ export const MainDiv = styled.div`
   }
 `;
 export const ButtonContainer = styled.div`
-  margin: 8px auto 20px auto;
+  margin:${props => !props.allUser ? '8px auto 20px auto' : '14px auto 20px 67%'} ;
   position: relative;
   width: fit-content;
   // left: ${props => props.update && '7%'};
@@ -87,16 +87,17 @@ export const TableBody = styled.table`
 `;
 
 export const LinkOption = styled.div`
-  width: fit-content;
-  margin-left: 5%;
+  width: 13%;
+  //margin-left: 5%;
   input {
+    float: left;
     cursor: pointer;
     width: 5%;
   }
   label {
     font-size: 14px;
     cursor: pointer;
-    margin-right: 33%;
+    //margin-right: 33%;
   }
 `;
 
@@ -125,9 +126,12 @@ export const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0,0,0,0.5);
-  width: 100vw;
-  height: 100vw;
+  width: 100%;
+  height: 100%;
   opacity: .6;
+  html{
+    overflow: hidden !important;
+  }
 `;
 
 export const Loading = styled.div`
