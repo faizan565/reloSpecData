@@ -1,14 +1,14 @@
 // import './App.css';
 import "./style/styles.css";
-import styled from 'styled-components'
-import {useEffect, useMemo, useState} from "react";
+import { DownloadExcel } from "react-excel-export";
+import React, {useEffect, useMemo, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faTrash, faTimes } from '@fortawesome/fontawesome-free-solid'
 import { useHistory } from "react-router-dom";
 import {
     Btn,
     ButtonContainer,
-    ConfirmModal,
+    ConfirmModal, ExportButton,
     LinkOption,
     Loading,
     MainDiv, SearchDiv,
@@ -24,13 +24,17 @@ import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/ArrowDownward";
 
 function AllUsers() {
+    let history = useHistory();
     const [items, setItems ] = useState([]);
     const [hideLinks, setHideLinks ] = useState('1');
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [filterText, setFilterText] = useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
     const [userId, setUserId] = useState(0);
-    let history = useHistory();
+    const [userData, setUserData ] = useState([]);
+    const [filteredItems, setFilteredItems ] = useState([]);
+    const [exportableData, setExportableData ] = useState([]);
+
     const columns = [
         {
             name: '#',
@@ -138,9 +142,6 @@ function AllUsers() {
             )
         }
     ];
-    const [userData, setUserData ] = useState([]);
-    const [filteredItems, setFilteredItems ] = useState([]);
-
     const setData = ((response) =>{
         setItems(response.items);
     } );
@@ -204,8 +205,17 @@ function AllUsers() {
                 setFilterText('');
             }
         };
+        let exportableData = filteredItems;
+        for (var i = 0; i < exportableData.length; i++){
+            var obj = exportableData[i];
+            for (var key in obj){
+                if (!isNaN(key)) {
+                    delete obj[key];
+                }
+            }
+        }
 
-        return (
+            return (
             <>
                 <LinkOption>
                     <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
@@ -214,9 +224,17 @@ function AllUsers() {
                 </LinkOption>
                 <SubHeader>
                     <SearchDiv>
-                    <input placeholder="Search by Name" type="text"onInput={e => setFilterText(e.target.value)} value={filterText} />
-                    <FontAwesomeIcon onClick={handleClear} style={{cursor: 'pointer'}} icon={faTimes}/>
-                </SearchDiv>
+                        <input placeholder="Search by Name" type="text"onInput={e => setFilterText(e.target.value)} value={filterText} />
+                        <FontAwesomeIcon onClick={handleClear} style={{cursor: 'pointer'}} icon={faTimes}/>
+                    </SearchDiv>
+                    <ExportButton margin>
+                        <DownloadExcel
+                            data={filteredItems}
+                            buttonLabel="Download"
+                            fileName="ReloSpec"
+                            className="export-button"
+                        />
+                    </ExportButton>
                     {hideLinks !== '2' &&
                     <div style={{float:'right'}} >
                         <Btn margin onClick={addUser}>Add Record</Btn>
@@ -227,16 +245,7 @@ function AllUsers() {
 
             </>
         );
-    }, [filterText, resetPaginationToggle]);
-
-
-
-    useEffect(() =>{
-        items !==[] && items.map(item =>{
-                setUserData(userData => [...userData,JSON.parse(item)]);
-                setFilteredItems(userData => [...userData,JSON.parse(item)])
-            },
-        )},[items]);
+    }, [filteredItems, filterText, resetPaginationToggle]);
 
     useEffect(()=>{
         fetch('http://localhost:8015/getCustomers.php')
@@ -248,8 +257,61 @@ function AllUsers() {
             });
     },[]);
 
-    return (
+    useEffect(() =>{
+        items !==[] && items.map(item =>{
+                setUserData(userData => [...userData,JSON.parse(item)]);
+                setFilteredItems(userData => [...userData,JSON.parse(item)])
+            },
+        )},[items]);
 
+    // const actionsMemo = useMemo(() => {
+    //     const convertArrayOfObjectsToCSV = (array)=> {
+    //         let result;
+    //         const columnDelimiter = ',';
+    //         const lineDelimiter = '\n';
+    //         const keys = Object.keys(array[0]);
+    //         const requiredKeys  = keys.slice(29,58);
+    //         // const requiredKeys = ["UserAutonumber","UserName","Password","CompanyDB","LicenseLevel","Firm","Network","BranchName","EmailAddress","Status","BillingMonth"];
+    //         console.log(requiredKeys);
+    //         result = '';
+    //         result += requiredKeys.join(columnDelimiter);
+    //         result += lineDelimiter;
+    //
+    //         array.forEach(item => {
+    //             let ctr = 0;
+    //             requiredKeys.forEach(key => {
+    //                 if (ctr > 0) result += columnDelimiter;
+    //
+    //                 result += item[key];
+    //                 ctr++;
+    //             });
+    //             result += lineDelimiter;
+    //         });
+    //         return result;
+    //     }
+    //
+    //     const downloadCSV = (array) => {
+    //         const link = document.createElement('a');
+    //         let csv = convertArrayOfObjectsToCSV(array);
+    //         if (csv == null) return;
+    //
+    //         const filename = 'ReloSpecUser.csv';
+    //
+    //         if (!csv.match(/^data:text\/csv/i)) {
+    //             csv = `data:text/csv;charset=utf-8,${csv}`;
+    //         }
+    //         console.log(csv);
+    //         link.setAttribute('href', encodeURI(csv));
+    //         link.setAttribute('download', filename);
+    //         document.body.appendChild(link);
+    //         setTimeout(()=>{link.click()},3000);
+    //     }
+    //     const Export = ({ onExport }) => <button onClick={e => onExport(e.target.value)}>Export</button>;
+    //     return(
+    //         <Export onExport={() => downloadCSV(filteredItems)}/>);
+    // }, [filteredItems]);
+
+    return (
         <MainDiv>
             <div className="App">
                 <Card>
@@ -265,10 +327,10 @@ function AllUsers() {
                         paginationResetDefaultPage={resetPaginationToggle}
                         subHeaderComponent={subHeaderComponentMemo}
                         subHeaderAlign="left"
-                        // theme="dark"
                         keyField="UserAutonumber"
                         striped
                         persistTableHead
+                        // actions={actionsMemo}
                     />
                 </Card>
             </div>

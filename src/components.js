@@ -25,7 +25,7 @@ export const Btn = styled.button`
   padding: 6px;
   background-color: white;
   color: #666;
-  margin-right: ${props => props.margin && '30px'};
+  margin-right: ${props => props.margin && '10px'};
   border: 2px solid #6c7ae0;
   cursor: pointer;
   border-radius: 5px;
@@ -147,7 +147,7 @@ export const WarningText = styled.p`
 `;
 
 export const SubHeader = styled.div`
-  width: 33%;
+  width: 39%;
   float: right;
   display: flex;
   margin-left: auto;
@@ -161,5 +161,22 @@ export const SearchDiv = styled.div`
   margin-right: 3%;
   input {
     margin: 5px;
+  }
+`;
+export const ExportButton = styled.div`
+  button{
+    padding: 6px;
+    background-color: white;
+    color: #666;
+    margin-right: ${props => props.margin && '10px'};
+    border: 2px solid #6c7ae0;
+    cursor: pointer;
+    border-radius: 5px;
+    &:hover {
+      background-color: #6c7ae0;
+      color: white;
+      border: 2px solid white;
+      cursor: pointer;
+    }
   }
 `;
