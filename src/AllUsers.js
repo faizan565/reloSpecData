@@ -214,7 +214,7 @@ function AllUsers() {
                 </LinkOption>
                 <SubHeader>
                     <SearchDiv>
-                    <input type="text"onInput={e => setFilterText(e.target.value)} value={filterText} />
+                    <input placeholder="Search by Name" type="text"onInput={e => setFilterText(e.target.value)} value={filterText} />
                     <FontAwesomeIcon onClick={handleClear} style={{cursor: 'pointer'}} icon={faTimes}/>
                 </SearchDiv>
                     {hideLinks !== '2' &&
