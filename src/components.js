@@ -13,10 +13,10 @@ export const MainDiv = styled.div`
   }
 `;
 export const ButtonContainer = styled.div`
-  margin: 8px auto 20px auto;
+  margin:${props => !props.allUser ? '8px auto 20px auto' : '14px auto 20px 67%'} ;
   position: relative;
   width: fit-content;
-  // left: ${props => props.update && '7%'};
+    // left: ${props => props.update && '7%'};
 `;
 
 export const Btn = styled.button`
@@ -25,7 +25,7 @@ export const Btn = styled.button`
   padding: 6px;
   background-color: white;
   color: #666;
-  margin-right: ${props => props.margin && '30px'};
+  margin-right: ${props => props.margin && '10px'};
   border: 2px solid #6c7ae0;
   cursor: pointer;
   border-radius: 5px;
@@ -87,16 +87,17 @@ export const TableBody = styled.table`
 `;
 
 export const LinkOption = styled.div`
-  width: fit-content;
-  margin-left: 5%;
+  width: 13%;
+  //margin-left: 5%;
   input {
+    float: left;
     cursor: pointer;
     width: 5%;
   }
   label {
     font-size: 14px;
     cursor: pointer;
-    margin-right: 33%;
+    //margin-right: 33%;
   }
 `;
 
@@ -125,18 +126,60 @@ export const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0,0,0,0.5);
-  width: 100vw;
-  height: 100vw;
+  width: 100%;
+  height: 100%;
   opacity: .6;
+  html{
+    overflow: hidden !important;
+  }
 `;
 
 export const Loading = styled.div`
   padding: 10px;
   font-size: large;
 `;
+
 export const WarningText = styled.p`
   padding: 2px;
   font-size: small;
   color: red;
   text-align: center;
+`;
+
+export const SubHeader = styled.div`
+  width: 39%;
+  float: right;
+  display: flex;
+  margin-left: auto;
+
+`;
+
+export const SearchDiv = styled.div`
+  float: right;
+  position: relative;
+  width: fit-content;
+  margin-right: 3%;
+  input {
+    margin: 5px;
+    border: 0;
+    border-bottom: 2px solid #d9d9fa;
+    color: #666;
+  }
+`;
+export const ExportButton = styled.div`
+  button{
+    padding: 6px;
+    background-color: white;
+    color: #666;
+    margin-right: ${props => props.margin && '10px'};
+    border: 2px solid #6c7ae0;
+    cursor: pointer;
+    border-radius: 5px;
+    &:hover {
+      background-color: #6c7ae0;
+      color: white;
+      border: 2px solid white;
+      cursor: pointer;
+    }
+  }
 `;
