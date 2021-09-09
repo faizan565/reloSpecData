@@ -215,7 +215,7 @@ function AllUsers() {
             }
         }
 
-            return (
+        return (
             <>
                 <LinkOption>
                     <label><input type="radio" name="link" value="1" onClick={()=> setHideLinks('1')} checked={hideLinks === '1'}/> Standard Display</label>
@@ -225,27 +225,30 @@ function AllUsers() {
                 <SubHeader>
                     <SearchDiv>
                         <input placeholder="Search by Name" type="text"onInput={e => setFilterText(e.target.value)} value={filterText} />
-                        <FontAwesomeIcon onClick={handleClear} style={{cursor: 'pointer'}} icon={faTimes}/>
-                    </SearchDiv>
-                    <ExportButton margin>
-                        <DownloadExcel
-                            data={filteredItems}
-                            buttonLabel="Download"
-                            fileName="ReloSpec"
-                            className="export-button"
-                        />
-                    </ExportButton>
+                        {filterText !== '' &&
+                            <FontAwesomeIcon onClick={handleClear} style={{cursor: 'pointer'}} icon={faTimes}/>
+                        }                    </SearchDiv>
                     {hideLinks !== '2' &&
-                    <div style={{float:'right'}} >
-                        <Btn margin onClick={addUser}>Add Record</Btn>
-                        <Btn onClick={filterUsers}>Filter Record</Btn>
-                    </div>
+                    <>
+                        <ExportButton margin>
+                            <DownloadExcel
+                                data={filteredItems}
+                                buttonLabel="Download"
+                                fileName="ReloSpec"
+                                className="export-button"
+                            />
+                        </ExportButton>
+                        <div style={{float:'right'}} >
+                            <Btn margin onClick={addUser}>Add Record</Btn>
+                            <Btn onClick={filterUsers}>Filter Record</Btn>
+                        </div>
+                    </>
                     }
                 </SubHeader>
 
             </>
         );
-    }, [filteredItems, filterText, resetPaginationToggle]);
+    }, [hideLinks, filteredItems, filterText, resetPaginationToggle]);
 
     useEffect(()=>{
         fetch('http://localhost:8015/getCustomers.php')

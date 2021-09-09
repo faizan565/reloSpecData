@@ -16,7 +16,7 @@ export const ButtonContainer = styled.div`
   margin:${props => !props.allUser ? '8px auto 20px auto' : '14px auto 20px 67%'} ;
   position: relative;
   width: fit-content;
-  // left: ${props => props.update && '7%'};
+    // left: ${props => props.update && '7%'};
 `;
 
 export const Btn = styled.button`
@@ -161,6 +161,9 @@ export const SearchDiv = styled.div`
   margin-right: 3%;
   input {
     margin: 5px;
+    border: 0;
+    border-bottom: 2px solid #d9d9fa;
+    color: #666;
   }
 `;
 export const ExportButton = styled.div`
