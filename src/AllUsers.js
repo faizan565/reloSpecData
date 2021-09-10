@@ -3,17 +3,14 @@ import "./style/styles.css";
 import { DownloadExcel } from "react-excel-export";
 import React, {useEffect, useMemo, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt, faTrash, faTimes } from '@fortawesome/fontawesome-free-solid'
+import {faFileExcel, faTimes} from '@fortawesome/fontawesome-free-solid'
 import { useHistory } from "react-router-dom";
 import {
     Btn,
-    ButtonContainer,
     ConfirmModal, ExportButton,
     LinkOption,
-    Loading,
     MainDiv, SearchDiv,
-    SearchInput, SubHeader,
-    TableBody,
+    SubHeader,
     Wrapper,
 } from "./components";
 import DataTable from "react-data-table-component";
@@ -22,6 +19,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/ArrowDownward";
+import ExportPdf from "./ExportPdf";
 
 function AllUsers() {
     let history = useHistory();
@@ -33,7 +31,7 @@ function AllUsers() {
     const [userId, setUserId] = useState(0);
     const [userData, setUserData ] = useState([]);
     const [filteredItems, setFilteredItems ] = useState([]);
-    const [exportableData, setExportableData ] = useState([]);
+    // const [exportableData, setExportableData ] = useState([]);
 
     const columns = [
         {
@@ -230,10 +228,11 @@ function AllUsers() {
                         }                    </SearchDiv>
                     {hideLinks !== '2' &&
                     <>
-                        <ExportButton margin>
+                        <ExportPdf rows={filteredItems}/>
+                        <ExportButton title="Export Excel" margin>
                             <DownloadExcel
                                 data={filteredItems}
-                                buttonLabel="Download"
+                                buttonLabel={<FontAwesomeIcon icon={faFileExcel}/>}
                                 fileName="ReloSpec"
                                 className="export-button"
                             />
