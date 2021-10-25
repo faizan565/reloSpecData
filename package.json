@@ -17,6 +17,7 @@
     "react-excel-export": "^1.0.6",
     "react-router": "^5.2.1",
     "react-scripts": "4.0.3",
+    "react-select": "^5.1.0",
     "styled-components": "^5.3.1",
     "web-vitals": "^1.1.2"
   },

@@ -147,7 +147,7 @@ export const WarningText = styled.p`
 `;
 
 export const SubHeader = styled.div`
-  width: 39%;
+  width: 45%;
   float: right;
   display: flex;
   margin-left: auto;
