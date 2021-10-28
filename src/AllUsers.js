@@ -12,7 +12,7 @@ import {
     LinkOption,
     Loading,
     MainDiv, SearchDiv,
-    SearchInput, SubHeader,
+    SearchInput, Spinner, SubHeader,
     TableBody,
     Wrapper,
 } from "./components";
@@ -32,6 +32,7 @@ function AllUsers() {
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
     const [userId, setUserId] = useState(0);
     const [userData, setUserData ] = useState([]);
+    const [pending, setPending ] = useState(true);
     const [filteredItems, setFilteredItems ] = useState([]);
     const [exportableData, setExportableData ] = useState([]);
 
@@ -250,6 +251,14 @@ function AllUsers() {
         );
     }, [hideLinks, filteredItems, filterText, resetPaginationToggle]);
 
+
+    const CustomLoader = () => (
+        <div style={{ padding: '24px' }}>
+            <Spinner />
+            <div>Loading data...</div>
+        </div>
+    );
+
     useEffect(()=>{
         fetch('http://localhost:8015/getCustomers.php')
             .then(res => res.json())
@@ -257,6 +266,8 @@ function AllUsers() {
                 setData({
                     items: result,
                 });
+
+                setPending(false);
             });
     },[]);
 
@@ -333,6 +344,8 @@ function AllUsers() {
                         keyField="UserAutonumber"
                         striped
                         persistTableHead
+                        progressPending={pending}
+                        progressComponent={<CustomLoader />}
                         // actions={actionsMemo}
                     />
                 </Card>
